@@ -1,1 +1,1 @@
-dfhj
+class kabu ():
