@@ -13,3 +13,10 @@ if __name__ == "__main__":
 
     test = curves(databasePath,datesName,casesName,kernel,thresholdW,thresholdPV)
     test.curveNormalization()
+    test.curveSmoothing("NormalizedCases","SmoothedNCases")
+    test.discreteDerivative("SmoothedNCases","FirstDerivate")
+    test.curveSmoothing("FirstDerivate","FirstDerivateSmoothed")
+    test.discreteDerivative("FirstDerivateSmoothed","SecondDerivate")
+    #test.plottingCurves()
+    test.idenNegatPositCuts("rollingFDS","FirstDerivateSmoothed")
+    test.idenPreviousDates("rollingFDS","FirstDerivateSmoothed")
