@@ -14,7 +14,7 @@ It has a main module called `kabu.py` which main input is a dataset with two var
 
 1. Clone the repository inside the folder
    ```sh 
-   git clone https://github.com/LinaMRuizG/minciencias_convocatorias.git
+   git clone https://github.com/LinaMRuizG/Kabu.git
    ```
 2. Create the virtual enviroment inside the same folder 
    ```sh 
@@ -28,24 +28,20 @@ It has a main module called `kabu.py` which main input is a dataset with two var
    ```sh 
    pip install -r requirements.txt
    ```
-4. Use the `exexution.py` to run the code and set the receiver mails and other attributes
+
 
 ## Running
 
-You could use the next command to run  the code automatically from bash each period of time:
-
-   ```sh 
-   source execution.sh
-   ```
+Use the `exexution.py` to run the code and set the **database path** and parameters such **kernel**.
 
 
 ## Contributing
 
-This project is in progress and it requires some improvments. Therefore, if you have any suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks!
+This project is in progress and it requires some improvments. Therefore, if you have any suggestion that would make this better, please fork the repository and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks!
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/improvments`)
-3. Commit your Changes (`git commit -m 'Add some improvment`)
+3. Commit your Changes (`git commit -m 'Adding some improvment`)
 4. Push to the Branch (`git push origin feature/improvments`)
 5. Open a Pull Request
 
@@ -55,6 +51,7 @@ This project is in progress and it requires some improvments. Therefore, if you 
 
 ## Acknowledgments
 * [Anderson Alexis Ruales Barbosa](https://co.linkedin.com/in/anderson-alexis-ruales-b27638199?original_referer=https%3A%2F%2Fwww.google.com%2F)
+* [Oscar Ignacio Mendoza Cardozo](https://loop.frontiersin.org/people/2156647/overview)
 
     
     
