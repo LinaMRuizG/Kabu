@@ -1,4 +1,4 @@
-# Kabu
+# Kabu a new method to identify epidemic waves and their peaks and valleys
 
 ***Kabu*** is a new methodology to identify waves, peaks, and valleys from epidemic curve
 
