@@ -24,13 +24,19 @@ class curves:
 
 
     def stansardizingDates(self):
+
+        """ This convert the dates in a Timestamp object"""
+
         df = self.df
         df[self.dN] = pd.to_datetime(df[self.dN]) 
         #this should be improved to standardize even when they are already Timestamp.. 
     
-    def curveNormalization(self):
+    def curveNormalization(self, columnName, outputName):
+
+        """This normalize (i.e., dividing by tha maximum value) a list"""
+
         df = self.df
-        df["NormalizedCases"] = df[self.cN]/df[self.cN].abs().max()
+        df[outputName] = df[columnName]/df[columnName].abs().max()
         #print(df)
 
     def curveSmoothing(self,columnToSmooth,outputName):
@@ -47,9 +53,42 @@ class curves:
         
         df = self.df
         df[outputName] = df[columnToDerivate].rolling(2).agg(lambda x : x.iloc[1]-x.iloc[0])
-        print(df)
+        #print(df)
         #if we can do this exactly as in mathematica delete NaN, suba los valores desde la 
         # posicion 2 a la 1  and put it in the last position
+    
+    def plottingTheCurveNormalized(self):
+
+        df = self.df
+
+        plt.figure(figsize=(12,12))
+        
+        plt.plot(df[self.dN],df["NormalizedCases"], color = "gray")
+        plt.plot(df[self.dN],df["SmoothedNCases"], color="red")
+        plt.ylabel("cases")
+        plt.xlabel("time")
+        plt.show()
+
+    def plottingTheCurveNoNormalized(self):
+
+        df = self.df
+
+        plt.figure(figsize=(12,12))
+        
+        plt.plot(df[self.dN],df[self.cN], color = "gray")
+        plt.plot(df[self.dN],df["SmoothedCases"], color="red")
+        plt.ylabel("cases")
+        plt.xlabel("time")
+        plt.show()
+
+
+
+class detectingWaves(curves):
+
+    #def __init__(self):
+    #super(???)
+
+
 
     def idenNegatPositCuts(self,outputName,columnToFindCuts):
 
@@ -59,31 +98,78 @@ class curves:
 
         df[outputName]= (df[columnToFindCuts].rolling(2).agg(lambda x : True if x.iloc[0]<0 and x.iloc[1]>0 else False)).fillna(False)
 
-    def idenPreviousDates(self,rollingCoName, rollingFromCoName):#column name from where the rolling comes from
+    
+    def idenPreviousDates(self,rollingCoName, columnToFindCuts):#column name from where the rolling comes from
 
+        #idenPreviousDates
         df = self.df
-        positions1 = df[df[rollingCoName]==True][[self.dN,rollingFromCoName]].reset_index(drop=True)
-        positions2 = df[df[self.dN].isin(list(positions1[self.dN] - datetime.timedelta(days=1)))][[self.dN,rollingFromCoName]].reset_index(drop=True)
-        positions2.rename(columns={self.dN:self.dN+"1",rollingFromCoName:rollingFromCoName+"1"},inplace=True)
+        positions1 = df[df[rollingCoName]==True][[self.dN,columnToFindCuts]].reset_index(drop=True)
+        print(positions1[self.dN])
+        print(type(positions1[self.dN][0]))
+        positions2 = df[df[self.dN].isin(list(positions1[self.dN] - datetime.timedelta(days=1)))][[self.dN,columnToFindCuts]].reset_index(drop=True)
+        positions2.rename(columns={self.dN:self.dN+"1",columnToFindCuts:columnToFindCuts+"1"},inplace=True)
         positions = pd.concat([positions1, positions2], axis=1)
-        print(positions)
+        #print(positions)
+
+        #gettingCutDates
+        self.cutDays=list(positions.agg(lambda x : x[self.dN] if abs(x[columnToFindCuts])<abs(x[columnToFindCuts+"1"])  else x[self.dN+"1"], axis=1))
+        #print(a1)
+
+    def thresholdPos(self):
+
+        thresholdP = 0
+
+        self.cutDays = df[df[self.dN].isin(self.cutDays)].reset_index(drop = True)
+        self.cutDays = self.cutDays.agg(lambda x : x[self.dN] if  x["SecondDerivate"] > thresholdP else [],axis=1)
+        self.cutDays = pd.to_datetime(self.cutDays.explode())
+        self.cutDays = self.cutDays[~np.isnat(self.cutDays)]
 
 
 
+    def plottingTheCurveNormalized(self):
+
+        super().plottingTheCurveNormalized()
+        for date in self.cutDays:
+            plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
+
+        
+
+
+    def plottingTheCurveNoNormalized(self):
+
+        super().plottingTheCurveNoNormalized()
+        for date in self.cutDays:
+            plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)    
 
 
 
+class detectingPeaksValleys(curve,detectingWaves):
 
-    def plottingCurves(self):
+    def idenCutPoints(self,outputName,columnToFindCuts): 
+
+        """This identifies the positions of the Negative values in the consecutive pair Negative/Positive 
+        and Positive values in the consecutive pair Positive/Negative
+        """
 
         df = self.df
 
-        plt.figure(figsize=(12,12))
-        plt.plot(df[self.dN],df["FirstDerivateSmoothed"], color = "gray")
-        plt.plot(df[self.dN],df["FirstDerivate"], color="red")
-        plt.ylabel("cases")
-        plt.xlabel("time")
-        plt.show()
+        df[outputName]= (df[columnToFindCuts].rolling(2).agg(lambda x : True if (x.iloc[0]<0 and x.iloc[1]>0) or (x.iloc[0]>0 and x.iloc[1]<0) else False)).fillna(False)
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

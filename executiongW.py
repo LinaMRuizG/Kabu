@@ -1,4 +1,4 @@
-from kabu import curves
+from kabu import *
 
 if __name__ == "__main__":
     
@@ -9,14 +9,21 @@ if __name__ == "__main__":
     thresholdW = 2.5*10**-5
     thresholdPV = 2.5*10**-5
 
-    #print(database)
+    test = detectingWaves(databasePath,datesName,casesName,kernel,thresholdW,thresholdPV)
+    
+    test.stansardizingDates()
 
-    test = curves(databasePath,datesName,casesName,kernel,thresholdW,thresholdPV)
-    test.curveNormalization()
+    #All these names for the variables are fixed, the only one changing (between users) are: datesName and casesName
+    test.curveNormalization("New_cases","NormalizedCases")#New_cases must be changed by self.cN
     test.curveSmoothing("NormalizedCases","SmoothedNCases")
+    test.curveSmoothing("New_cases","SmoothedCases")
+   
     test.discreteDerivative("SmoothedNCases","FirstDerivate")
     test.curveSmoothing("FirstDerivate","FirstDerivateSmoothed")
     test.discreteDerivative("FirstDerivateSmoothed","SecondDerivate")
-    #test.plottingCurves()
+   
     test.idenNegatPositCuts("rollingFDS","FirstDerivateSmoothed")
     test.idenPreviousDates("rollingFDS","FirstDerivateSmoothed")
+    
+    #test.plottingTheCurveNormalized()
+    test.plottingTheCurveNoNormalized()
