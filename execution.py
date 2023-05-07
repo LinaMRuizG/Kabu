@@ -12,16 +12,15 @@ if __name__ == "__main__":
     thresholdPV = -2.5*10**-5
 
     #for curves class
-    #test = curves(databasePath,datesName,casesName,kernel,thresholdW,thresholdPV)
+    #test = curves(databasePath,datesName,casesName,kernel)
     #test.run2()
     
-
     #for waves class
-    #test = waves(databasePath,datesName,casesName,kernel,thresholdW,thresholdPV)
+    #test = waves(databasePath,datesName,casesName,kernel,thresholdW)
     #test.run() 
 
     #for peaksValleys class
-    test = peaksValleys(databasePath,datesName,casesName,kernel,thresholdW,thresholdPV)
+    test = peaksValleys(databasePath,datesName,casesName,kernel,thresholdPV)
     test.run()   
     
     

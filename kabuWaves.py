@@ -2,7 +2,11 @@ from kabu import *
 
 class waves(curves):
         
-
+    def __init__(self,databasePath,datesName,casesName,kernel,thresholdW):
+        super().__init__(databasePath,datesName,casesName,kernel)
+        self.thresholdW = thresholdW
+    
+    
     def idenCutPoints(self,inputToFindCuts,outputCuts):
 
         """It identifies the positions with a Positive value for each consecutive pair
@@ -33,9 +37,6 @@ class waves(curves):
         self.cutDays = list(positions.agg(lambda x : x[self.dN] if abs(x[inputToFindCuts])<abs(x[inputToFindCuts+"1"])  else x[self.dN+"1"], axis=1))
         
         
-
-
-
     def thresholdPos(self):
 
         """It selects those cutDays above the threshold"""

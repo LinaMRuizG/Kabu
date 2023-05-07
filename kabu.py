@@ -6,18 +6,7 @@ import numpy as np
 
 class curves:
 
-    def __init__(self,
-    
-    #those must be allways set by the user
-    databasePath,
-    datesName,
-    casesName,
-    kernel,
-    
-    #those could be fixed
-    thresholdW = 0,
-    thresholdPV = 0
-    ):
+    def __init__(self,databasePath,datesName,casesName,kernel):
         
         #database
         self.df = pd.read_csv(databasePath)
@@ -31,8 +20,7 @@ class curves:
         
         #parameters
         self.kernel = kernel/2 # is the same kernel for both smoothing
-        self.thresholdW = thresholdW
-        self.thresholdPV = thresholdPV
+    
 
 
     def stansardizingDates(self):

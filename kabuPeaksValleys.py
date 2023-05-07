@@ -2,7 +2,10 @@ from kabuWaves import *
 
 class peaksValleys(waves):
 
-    
+    def __init__(self,databasePath,datesName,casesName,kernel,thresholdPV):
+        super().__init__(databasePath,datesName,casesName,kernel,thresholdW=None)
+        self.thresholdPV = thresholdPV
+
     def idenCutPoints(self,columnToFindCuts,outputName): 
 
         """This identifies the positions of the Negative values in the consecutive pair Negative/Positive 
