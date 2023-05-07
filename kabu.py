@@ -2,10 +2,22 @@ import pandas as pd
 from scipy.ndimage.filters import gaussian_filter
 import matplotlib.pyplot as plt
 import datetime
+import numpy as np
 
 class curves:
 
-    def __init__(self,databasePath,datesName,casesName,kernel,thresholdW,thresholdPV):
+    def __init__(self,
+    
+    #those must be allways set by the user
+    databasePath,
+    datesName,
+    casesName,
+    kernel,
+    
+    #those could be fixed
+    thresholdW = 0,
+    thresholdPV = 0
+    ):
         
         #database
         self.df = pd.read_csv(databasePath)
@@ -13,7 +25,7 @@ class curves:
         # But it could be for more columns or curves.
         # the dates could be strings or datetimes
 
-        #column names
+        #column names variable
         self.dN = datesName
         self.cN = casesName
         
@@ -25,137 +37,115 @@ class curves:
 
     def stansardizingDates(self):
 
-        """ This convert the dates in a Timestamp object"""
+        """It converts the dates in a Timestamp object"""
 
         df = self.df
         df[self.dN] = pd.to_datetime(df[self.dN]) 
         #this should be improved to standardize even when they are already Timestamp.. 
-    
-    def curveNormalization(self, columnName, outputName):
 
-        """This normalize (i.e., dividing by tha maximum value) a list"""
+    
+    def curveNormalization(self, inputNormalization, outputNormalization):
+
+        """It normalizes (i.e., dividing by tha maximum value) a list"""
 
         df = self.df
-        df[outputName] = df[columnName]/df[columnName].abs().max()
+        df[outputNormalization] = df[inputNormalization]/df[inputNormalization].abs().max()
         #print(df)
 
-    def curveSmoothing(self,columnToSmooth,outputName):
 
-        """this method made a Gaussian filter of any column in the dataframe"""
+    def curveSmoothing(self,inputToSmooth,outputSmoothed):
+
+        """It makes a Gaussian filter of any column in the dataframe"""
         
         df = self.df
-        df[outputName] = gaussian_filter(df[columnToSmooth], self.kernel)
-        
+        df[outputSmoothed] = gaussian_filter(df[inputToSmooth], self.kernel)
+
     
-    def discreteDerivative(self,columnToDerivate,outputName):
+    def curveSmoothing2(self,inputToSmooth,outputSmoothed):
         
-        """this method made a discrete derivate of any column in the dataframe"""
+        """It makes a Gaussian filter of any column in the dataframe"""
+
+        smoothed_cases = []
+        df = self.df
+        
+        for date in sorted(df[self.dN]):
+            df['gaussian'] = np.exp( - (((df[self.dN] - date).apply(lambda x: x.days)) ** 2) / (2 * (self.kernel ** 2)))
+            
+            df['gaussian'] /= df['gaussian'].sum()
+            
+            smoothed_cases.append((df[inputToSmooth] * df['gaussian']).sum())
+            
+        
+        df[outputSmoothed] = smoothed_cases
+      
+    
+    def discreteDerivative(self,inputToDerivate,outputDerivate):
+        
+        """It makes a discrete derivate of any column in the dataframe"""
         
         df = self.df
-        df[outputName] = df[columnToDerivate].rolling(2).agg(lambda x : x.iloc[1]-x.iloc[0])
+        df[outputDerivate] = df[inputToDerivate].rolling(2).agg(lambda x : x.iloc[1]-x.iloc[0])
         #print(df)
         #if we can do this exactly as in mathematica delete NaN, suba los valores desde la 
         # posicion 2 a la 1  and put it in the last position
+
     
     def plottingTheCurveNormalized(self):
 
+        """It makes a plot of the Normalized Cases"""
+
         df = self.df
 
-        plt.figure(figsize=(12,12))
+        plt.figure(figsize=(12,6))
         
-        plt.plot(df[self.dN],df["NormalizedCases"], color = "gray")
-        plt.plot(df[self.dN],df["SmoothedNCases"], color="red")
-        plt.ylabel("cases")
-        plt.xlabel("time")
-        plt.show()
+        plt.plot(df[self.dN],df["NormalizedCases"], color = "gray", label ="Raw Cases")
+        plt.plot(df[self.dN],df["SmoothedNCases"], color="red", label ="Smoothed Cases")
+        plt.ylabel("Normalized Cases")
+        plt.xlabel("Time")
+        plt.title("Epidemic curve")
+        plt.legend()
+        #plt.show()
 
     def plottingTheCurveNoNormalized(self):
 
+        """It makes a plot of the No-Normalized Cases"""
+
         df = self.df
 
-        plt.figure(figsize=(12,12))
+        plt.figure(figsize=(12,6))
         
-        plt.plot(df[self.dN],df[self.cN], color = "gray")
-        plt.plot(df[self.dN],df["SmoothedCases"], color="red")
-        plt.ylabel("cases")
-        plt.xlabel("time")
+        plt.plot(df[self.dN],df[self.cN], color = "gray", label ="Raw Cases")
+        plt.plot(df[self.dN],df["SmoothedCases"], color="red", label ="Smoothed Cases")
+        plt.ylabel("Cases")
+        plt.xlabel("Time")
+        plt.title("Epidemic curve")
+        plt.legend()
+        #plt.show()
+
+    def run(self):
+
+        """It run all the class methods in the correct order"""
+
+        self.stansardizingDates()
+
+        self.curveNormalization(self.cN,"NormalizedCases")
+        
+        self.curveSmoothing2("NormalizedCases","SmoothedNCases")
+        self.curveSmoothing2(self.cN,"SmoothedCases")
+    
+        
+        self.discreteDerivative("SmoothedNCases","FirstDerivate")
+        self.curveSmoothing2("FirstDerivate","FirstDerivateSmoothed")
+        
+        
+        self.discreteDerivative("FirstDerivateSmoothed","SecondDerivate")
+        
+    def run2(self):
+        
+        self.run()
+        self.plottingTheCurveNormalized()
+        self.plottingTheCurveNoNormalized()
         plt.show()
-
-
-
-class detectingWaves(curves):
-
-    #def __init__(self):
-    #super(???)
-
-
-
-    def idenNegatPositCuts(self,outputName,columnToFindCuts):
-
-        """This identifies the positions with a Positive value"""
-
-        df = self.df
-
-        df[outputName]= (df[columnToFindCuts].rolling(2).agg(lambda x : True if x.iloc[0]<0 and x.iloc[1]>0 else False)).fillna(False)
-
-    
-    def idenPreviousDates(self,rollingCoName, columnToFindCuts):#column name from where the rolling comes from
-
-        #idenPreviousDates
-        df = self.df
-        positions1 = df[df[rollingCoName]==True][[self.dN,columnToFindCuts]].reset_index(drop=True)
-        print(positions1[self.dN])
-        print(type(positions1[self.dN][0]))
-        positions2 = df[df[self.dN].isin(list(positions1[self.dN] - datetime.timedelta(days=1)))][[self.dN,columnToFindCuts]].reset_index(drop=True)
-        positions2.rename(columns={self.dN:self.dN+"1",columnToFindCuts:columnToFindCuts+"1"},inplace=True)
-        positions = pd.concat([positions1, positions2], axis=1)
-        #print(positions)
-
-        #gettingCutDates
-        self.cutDays=list(positions.agg(lambda x : x[self.dN] if abs(x[columnToFindCuts])<abs(x[columnToFindCuts+"1"])  else x[self.dN+"1"], axis=1))
-        #print(a1)
-
-    def thresholdPos(self):
-
-        thresholdP = 0
-
-        self.cutDays = df[df[self.dN].isin(self.cutDays)].reset_index(drop = True)
-        self.cutDays = self.cutDays.agg(lambda x : x[self.dN] if  x["SecondDerivate"] > thresholdP else [],axis=1)
-        self.cutDays = pd.to_datetime(self.cutDays.explode())
-        self.cutDays = self.cutDays[~np.isnat(self.cutDays)]
-
-
-
-    def plottingTheCurveNormalized(self):
-
-        super().plottingTheCurveNormalized()
-        for date in self.cutDays:
-            plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
-
-        
-
-
-    def plottingTheCurveNoNormalized(self):
-
-        super().plottingTheCurveNoNormalized()
-        for date in self.cutDays:
-            plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)    
-
-
-
-class detectingPeaksValleys(curve,detectingWaves):
-
-    def idenCutPoints(self,outputName,columnToFindCuts): 
-
-        """This identifies the positions of the Negative values in the consecutive pair Negative/Positive 
-        and Positive values in the consecutive pair Positive/Negative
-        """
-
-        df = self.df
-
-        df[outputName]= (df[columnToFindCuts].rolling(2).agg(lambda x : True if (x.iloc[0]<0 and x.iloc[1]>0) or (x.iloc[0]>0 and x.iloc[1]<0) else False)).fillna(False)
-
-    
 
 
 
