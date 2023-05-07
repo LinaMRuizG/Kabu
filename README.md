@@ -4,7 +4,11 @@
 
 ## Description of files in this repository:
 
-It has a main module called `kabu.py` which main input is a dataset with two variables (i.e., **daily cases**, and **dates of report**). There are some additional parameters the user could set such as **kernel** and two **thresholds** (this last is optional).
+* `kabu.py` is the main module. It makes the necessary calculations for the subsequent identification of waves, and peaks and valleys. The main input is a dataset with two variables (i.e., **daily cases**, and **dates of report**) and the **kernel** to smooth the epidemic curve with a Gaussian filter.
+
+* `kabuWaves.py` is a module to estimate the waves. You could set an optional **threshold** to filter the cut days and the most significant waves. There is a file called **configuration** that gives you and idea of the magnitude of this value.
+
+* `kabuPeaksValleys.py` is a module to estimate the Peaks and Valleys. You could set an optional **threshold** to filter the cut days and the most significant peaks. There is a file called **configuration** that gives you and idea of the magnitude of this value.
 
 ## Installation
 
@@ -32,7 +36,7 @@ It has a main module called `kabu.py` which main input is a dataset with two var
 
 ## Running
 
-Use the `exexution.py` to run the code and set the **database path** and parameters such **kernel**.
+Use the `exexution.py` to run the code and set the **database path** and parameters such as **kernel**.
 
 
 ## Contributing
