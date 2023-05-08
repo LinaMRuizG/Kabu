@@ -6,10 +6,10 @@ import numpy as np
 
 class curves:
 
-    def __init__(self,databasePath,datesName,casesName,kernel,plotName):
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder):
         
         #database
-        self.df = pd.read_csv(databasePath)
+        self.df = dataframe
         # in this frst version the database is a DataFrame with 2 columns 
         # But it could be for more columns or curves.
         # the dates could be strings or datetimes
@@ -23,6 +23,7 @@ class curves:
 
         #to fit
         self.plotName = plotName
+        self.outFolder = outFolder
 
 
     def stansardizingDates(self):
@@ -92,7 +93,7 @@ class curves:
         plt.plot(df[self.dN],df["SmoothedNCases"], color="red", label ="Smoothed Cases")
         plt.ylabel("Normalized Cases")
         plt.xlabel("Time")
-        plt.title("Epidemic curve "+ self.plotName)
+        plt.title(self.plotName)
         plt.legend()
         #plt.show()
 
@@ -108,9 +109,11 @@ class curves:
         plt.plot(df[self.dN],df["SmoothedCases"], color="red", label ="Smoothed Cases")
         plt.ylabel("Cases")
         plt.xlabel("Time")
-        plt.title("Epidemic curve "+ self.plotName)
+        plt.title(self.plotName)
         plt.legend()
         #plt.show()
+
+    
 
     def run(self):
 

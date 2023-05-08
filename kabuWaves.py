@@ -2,8 +2,8 @@ from kabu import *
 
 class waves(curves):
         
-    def __init__(self,databasePath,datesName,casesName,kernel,plotName,thresholdW):
-        super().__init__(databasePath,datesName,casesName,kernel, plotName)
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,thresholdW=0):
+        super().__init__(dataframe,datesName,casesName,kernel,plotName,outFolder)
         self.thresholdW = thresholdW
     
     
@@ -61,6 +61,7 @@ class waves(curves):
         
         for date in self.cutDays:
             plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
+        plt.savefig(self.outFolder+self.plotName+"N.png")
         plt.show()
 
         
@@ -74,6 +75,7 @@ class waves(curves):
         
         for date in self.cutDays:
             plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
+        plt.savefig(self.outFolder+self.plotName+"NN.png")
         plt.show()
 
 
