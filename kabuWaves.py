@@ -2,8 +2,8 @@ from kabu import *
 
 class waves(curves):
         
-    def __init__(self,databasePath,datesName,casesName,kernel,thresholdW):
-        super().__init__(databasePath,datesName,casesName,kernel)
+    def __init__(self,databasePath,datesName,casesName,kernel,plotName,thresholdW):
+        super().__init__(databasePath,datesName,casesName,kernel, plotName)
         self.thresholdW = thresholdW
     
     

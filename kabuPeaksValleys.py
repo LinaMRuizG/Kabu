@@ -2,8 +2,8 @@ from kabuWaves import *
 
 class peaksValleys(waves):
 
-    def __init__(self,databasePath,datesName,casesName,kernel,thresholdPV):
-        super().__init__(databasePath,datesName,casesName,kernel,thresholdW=None)
+    def __init__(self,databasePath,datesName,casesName,kernel,plotName,thresholdPV):
+        super().__init__(databasePath,datesName,casesName,kernel,plotName,thresholdW=None)
         self.thresholdPV = thresholdPV
 
     def idenCutPoints(self,columnToFindCuts,outputName): 
@@ -23,7 +23,6 @@ class peaksValleys(waves):
         """It selects those cutDays below the threshold"""
         
         thresholdN = self.thresholdPV
-        print(thresholdN)
         df = self.df
         
         
@@ -32,7 +31,7 @@ class peaksValleys(waves):
         select = cutDayDF.groupby(cutDayDF.index//2).agg(lambda x : x if  min(df[(df[self.dN]>=x.iloc[0]) & (df[self.dN]<=x.iloc[1])]["SecondDerivate"]) < thresholdN else [])
         dates = pd.to_datetime(select.explode())
         self.cutDays = dates[~np.isnat(dates)]
-        print(self.cutDays)
+        
 
     
     def run(self):

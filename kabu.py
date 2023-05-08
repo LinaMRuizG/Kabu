@@ -6,7 +6,7 @@ import numpy as np
 
 class curves:
 
-    def __init__(self,databasePath,datesName,casesName,kernel):
+    def __init__(self,databasePath,datesName,casesName,kernel,plotName):
         
         #database
         self.df = pd.read_csv(databasePath)
@@ -20,7 +20,9 @@ class curves:
         
         #parameters
         self.kernel = kernel/2 # is the same kernel for both smoothing
-    
+
+        #to fit
+        self.plotName = plotName
 
 
     def stansardizingDates(self):
@@ -90,7 +92,7 @@ class curves:
         plt.plot(df[self.dN],df["SmoothedNCases"], color="red", label ="Smoothed Cases")
         plt.ylabel("Normalized Cases")
         plt.xlabel("Time")
-        plt.title("Epidemic curve")
+        plt.title("Epidemic curve "+ self.plotName)
         plt.legend()
         #plt.show()
 
@@ -106,7 +108,7 @@ class curves:
         plt.plot(df[self.dN],df["SmoothedCases"], color="red", label ="Smoothed Cases")
         plt.ylabel("Cases")
         plt.xlabel("Time")
-        plt.title("Epidemic curve")
+        plt.title("Epidemic curve "+ self.plotName)
         plt.legend()
         #plt.show()
 
