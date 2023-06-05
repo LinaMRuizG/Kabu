@@ -19,13 +19,13 @@ class curves:
         self.cN = casesName
         
         #parameters
-        self.kernel = kernel/2 # is the same kernel for both smoothing
+        self.kernel = kernel # is the same kernel for both smoothing
 
         #to fit
         self.plotName = plotName
         self.outFolder = outFolder
-
-
+    
+    
     def stansardizingDates(self):
 
         """It converts the dates in a Timestamp object"""
@@ -37,36 +37,53 @@ class curves:
     
     def curveNormalization(self, inputNormalization, outputNormalization):
 
-        """It normalizes (i.e., dividing by tha maximum value) a list"""
+        """It normalizes (i.e., dividing by the maximum value) a column in the dataframe.
+        The result is a new column in the dataframe"""
 
         df = self.df
         df[outputNormalization] = df[inputNormalization]/df[inputNormalization].abs().max()
         #print(df)
 
 
+    def __gettingKernel(self):
+
+        kInfo = self.kernel
+        
+        if isinstance(self.kernel,(int,float)):
+            k = self.kernel/2
+        else:
+            df = kInfo[0]
+            c1 = kInfo[1]
+            v1 = kInfo[2]
+            c2 = kInfo[3]
+            k = df[df[c1]==v1][c2]
+        return int(k.iloc[0])/2
+
+
+
     def curveSmoothing(self,inputToSmooth,outputSmoothed):
 
-        """It makes a Gaussian filter of any column in the dataframe"""
-        
+        """It makes a Gaussian filter of any column in the dataframe using the
+        gaussian_filter function """
+
+        kernel = self.__gettingKernel()
         df = self.df
-        df[outputSmoothed] = gaussian_filter(df[inputToSmooth], self.kernel)
+        df[outputSmoothed] = gaussian_filter(df[inputToSmooth], kernel)
 
     
     def curveSmoothing2(self,inputToSmooth,outputSmoothed):
         
-        """It makes a Gaussian filter of any column in the dataframe"""
+        """It makes a Gaussian filter of any column in the dataframe using the equation 
+        of gaussian filter"""
 
+        kernel = self.__gettingKernel()
         smoothed_cases = []
         df = self.df
         
         for date in sorted(df[self.dN]):
-            df['gaussian'] = np.exp( - (((df[self.dN] - date).apply(lambda x: x.days)) ** 2) / (2 * (self.kernel ** 2)))
-            
+            df['gaussian'] = np.exp( - (((df[self.dN] - date).apply(lambda x: x.days)) ** 2) / (2 * (kernel ** 2)))
             df['gaussian'] /= df['gaussian'].sum()
-            
-            smoothed_cases.append((df[inputToSmooth] * df['gaussian']).sum())
-            
-        
+            smoothed_cases.append((df[inputToSmooth] * df['gaussian']).sum())     
         df[outputSmoothed] = smoothed_cases
       
     
@@ -76,10 +93,7 @@ class curves:
         
         df = self.df
         df[outputDerivate] = df[inputToDerivate].rolling(2).agg(lambda x : x.iloc[1]-x.iloc[0])
-        #print(df)
-        #if we can do this exactly as in mathematica delete NaN, suba los valores desde la 
-        # posicion 2 a la 1  and put it in the last position
-
+    
     
     def plottingTheCurveNormalized(self):
 
@@ -95,7 +109,6 @@ class curves:
         plt.xlabel("Time")
         plt.title(self.plotName)
         plt.legend()
-        #plt.show()
 
     def plottingTheCurveNoNormalized(self):
 
@@ -111,7 +124,6 @@ class curves:
         plt.xlabel("Time")
         plt.title(self.plotName)
         plt.legend()
-        #plt.show()
 
     
 
