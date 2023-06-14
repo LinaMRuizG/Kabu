@@ -1,10 +1,12 @@
 from kabu import *
+import json 
 
 class waves(curves):
         
-    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,thresholdW=0):
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,thresholdW=0):
         super().__init__(dataframe,datesName,casesName,kernel,plotName,outFolder)
         self.thresholdW = thresholdW
+        self.dfName = dfName
     
     
     def idenCutPoints(self,inputToFindCuts,outputCuts):
@@ -34,8 +36,11 @@ class waves(curves):
         
         positions = pd.concat([positions1, positions2], axis=1)
 
+        
+
         self.cutDays = list(positions.agg(lambda x : x[self.dN] if abs(x[inputToFindCuts])<abs(x[inputToFindCuts+"1"])  else x[self.dN+"1"], axis=1))
         
+    
         
     def thresholdPos(self):
 
@@ -62,7 +67,7 @@ class waves(curves):
         for date in self.cutDays:
             plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
         plt.savefig(self.outFolder+self.plotName+"N.png")
-        plt.show()
+        #plt.show()
 
         
     def plottingTheCurveNoNormalized(self):
@@ -75,8 +80,8 @@ class waves(curves):
         
         for date in self.cutDays:
             plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
-        plt.savefig(self.outFolder+self.plotName+"NN.png")
-        plt.show()
+        plt.savefig(self.outFolder+self.plotName+"NoN.png")
+        #plt.show()
 
 
     def run(self):
@@ -87,6 +92,13 @@ class waves(curves):
         self.idenCutPoints("FirstDerivateSmoothed","rollingFDS")
         self.idenPreviousDates("rollingFDS","FirstDerivateSmoothed")
         self.thresholdPos()
+        
+        self.df["CutDays"] = self.df[self.dN].isin(self.cutDays).astype(int)
+        df = self.df[[self.dN,self.cN,"SmoothedCases","CutDays"]]
+        df.to_csv("./dataframes/" + self.dfName + ".csv")
+        #print(self.df)
+        #print(df)
+
         self.plottingTheCurveNormalized()
         self.plottingTheCurveNoNormalized()
 

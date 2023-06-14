@@ -50,14 +50,14 @@ class curves:
         kInfo = self.kernel
         
         if isinstance(self.kernel,(int,float)):
-            k = self.kernel/2
+            k = self.kernel
         else:
             df = kInfo[0]
             c1 = kInfo[1]
             v1 = kInfo[2]
             c2 = kInfo[3]
-            k = df[df[c1]==v1][c2]
-        return int(k.iloc[0])/2
+            k = int(df[df[c1]==v1][c2].iloc[0])
+        return k/2
 
 
 
@@ -100,6 +100,7 @@ class curves:
         """It makes a plot of the Normalized Cases"""
 
         df = self.df
+        kernel = self.__gettingKernel()
 
         plt.figure(figsize=(12,6))
         
@@ -107,7 +108,7 @@ class curves:
         plt.plot(df[self.dN],df["SmoothedNCases"], color="red", label ="Smoothed Cases")
         plt.ylabel("Normalized Cases")
         plt.xlabel("Time")
-        plt.title(self.plotName)
+        plt.title(self.plotName + "k: "+ str(kernel))
         plt.legend()
 
     def plottingTheCurveNoNormalized(self):
