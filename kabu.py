@@ -6,7 +6,7 @@ import numpy as np
 
 class curves:
 
-    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder):
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName):
         
         #database
         self.df = dataframe
@@ -23,7 +23,6 @@ class curves:
 
         #to fit
         self.plotName = plotName
-        self.outFolder = outFolder
     
     
     def stansardizingDates(self):

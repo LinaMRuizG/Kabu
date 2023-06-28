@@ -2,8 +2,8 @@ from kabuWaves import *
 
 class peaksValleys(waves):
 
-    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,thresholdPV=0):
-        super().__init__(dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,thresholdW=None)
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,outFolder2,thresholdPV=0):
+        super().__init__(dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,outFolder2,thresholdW=None)
         self.thresholdPV = thresholdPV
 
     def idenCutPoints(self,columnToFindCuts,outputName): 

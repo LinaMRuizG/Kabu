@@ -3,10 +3,12 @@ import json
 
 class waves(curves):
         
-    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,thresholdW=0):
-        super().__init__(dataframe,datesName,casesName,kernel,plotName,outFolder)
-        self.thresholdW = thresholdW
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,dfName,outFolder = "./plot/",outFolder2="./dataframes/",thresholdW=0):
+        super().__init__(dataframe,datesName,casesName,kernel,plotName)     
         self.dfName = dfName
+        self.outFolder = outFolder
+        self.outFolder2 = outFolder2
+        self.thresholdW = thresholdW
     
     
     def idenCutPoints(self,inputToFindCuts,outputCuts):
@@ -17,8 +19,6 @@ class waves(curves):
         df = self.df
 
         df[outputCuts]= (df[inputToFindCuts].rolling(2).agg(lambda x : True if x.iloc[0]<0 and x.iloc[1]>0 else False)).fillna(False)
-
-        #print(df)
 
 
     def idenPreviousDates(self,inputCuts,inputToFindCuts):#column name from where the rolling comes from
@@ -67,7 +67,6 @@ class waves(curves):
         for date in self.cutDays:
             plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
         plt.savefig(self.outFolder+self.plotName+"N.png")
-        #plt.show()
 
         
     def plottingTheCurveNoNormalized(self):
@@ -81,7 +80,6 @@ class waves(curves):
         for date in self.cutDays:
             plt.axvline(x=date, color='black', ymax= max(cases), linestyle='--', linewidth=.91)
         plt.savefig(self.outFolder+self.plotName+"NoN.png")
-        #plt.show()
 
 
     def run(self):
@@ -95,9 +93,7 @@ class waves(curves):
         
         self.df["CutDays"] = self.df[self.dN].isin(self.cutDays).astype(int)
         df = self.df[[self.dN,self.cN,"SmoothedCases","CutDays"]]
-        df.to_csv("./dataframes/" + self.dfName + ".csv")
-        #print(self.df)
-        #print(df)
+        df.to_csv(self.outFolder2 + self.dfName + ".csv")
 
         self.plottingTheCurveNormalized()
         self.plottingTheCurveNoNormalized()
