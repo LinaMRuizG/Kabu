@@ -14,22 +14,28 @@ if __name__ == "__main__":
     database = pd.read_csv("/Users/linaruiz/Documents/projectEpidemicCurve/data/database.csv")
     datesName = "Date_reported"
     casesName = "New_cases"
-    thresholdW = 0#2.5*10**-5
-    thresholdPV = 0#-2.5*10**-5
-    plotName = "Epidemic curve for Italy"
+    kernel = 28
+    plotName = "Epidemic curve for Italy2"
+    dfName = "Epidemic curve for Italy2"
     outFolder = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/plots/"
-    cutDaysName = "itally"
+    outFolder2 = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/dataframes/"
+    thresholdW = 0
+    thresholdPV = 0
 
     #for curves class
-    #test = curves(database,datesName,casesName,kernel,plotName,outFolder)
+    #test = curves(database,datesName,casesName,kernel,plotName)
     #test.run2()
     
     #for waves class
-    test = waves(database,datesName,casesName,kernel,plotName,outFolder,cutDaysName,thresholdW)
-    test.run() 
+    #test = waves(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdW)
+    #test.run() 
+    #test2 = waves(database,datesName,casesName,kernel,plotName,dfName)
+    #test2.run() 
 
     #for peaksValleys class
-    #test = peaksValleys(database,datesName,casesName,kernel,plotName,outFolder,thresholdPV)
-    #test.run()   
+    test = peaksValleys(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdPV)
+    test.run() 
+    #test2 = peaksValleys(database,datesName,casesName,kernel,plotName,dfName)
+    #test2.run() 
     
     

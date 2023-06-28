@@ -1,9 +1,8 @@
 from kabu import *
-import json 
 
 class waves(curves):
         
-    def __init__(self,dataframe,datesName,casesName,kernel,plotName,dfName,outFolder = "./plot/",outFolder2="./dataframes/",thresholdW=0):
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,dfName,outFolder = "./plots/",outFolder2="./dataframes/",thresholdW=0):
         super().__init__(dataframe,datesName,casesName,kernel,plotName)     
         self.dfName = dfName
         self.outFolder = outFolder
@@ -87,6 +86,7 @@ class waves(curves):
         """It run all the class methods in the correct order"""
         
         super().run()
+        
         self.idenCutPoints("FirstDerivateSmoothed","rollingFDS")
         self.idenPreviousDates("rollingFDS","FirstDerivateSmoothed")
         self.thresholdPos()

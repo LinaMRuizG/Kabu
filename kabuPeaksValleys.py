@@ -2,8 +2,8 @@ from kabuWaves import *
 
 class peaksValleys(waves):
 
-    def __init__(self,dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,outFolder2,thresholdPV=0):
-        super().__init__(dataframe,datesName,casesName,kernel,plotName,outFolder,dfName,outFolder2,thresholdW=None)
+    def __init__(self,dataframe,datesName,casesName,kernel,plotName,dfName,outFolder = "./plots/",outFolder2="./dataframes/",thresholdPV=0):
+        super().__init__(dataframe,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdW=None)
         self.thresholdPV = thresholdPV
 
     def idenCutPoints(self,columnToFindCuts,outputName): 
@@ -46,7 +46,7 @@ class peaksValleys(waves):
         self.discreteDerivative("SmoothedNCases","FirstDerivate")
         self.curveSmoothing2("FirstDerivate","FirstDerivateSmoothed")
         self.discreteDerivative("FirstDerivateSmoothed","SecondDerivate")
-        
+
         #those are the methods from this class
         self.idenCutPoints("SecondDerivate","rollingSD")
         
@@ -55,6 +55,11 @@ class peaksValleys(waves):
         
         #those are the methods from this class
         self.thresholdNeg()
+
+        #creating and saving the output dataframe
+        self.df["CutDays"] = self.df[self.dN].isin(self.cutDays).astype(int)
+        df = self.df[[self.dN,self.cN,"SmoothedCases","CutDays"]]
+        df.to_csv(self.outFolder2 + self.dfName + ".csv")
         
         self.plottingTheCurveNormalized()
         self.plottingTheCurveNoNormalized()
