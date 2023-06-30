@@ -15,16 +15,16 @@ if __name__ == "__main__":
     datesName = "Date_reported"
     casesName = "New_cases"
     kernel = 28
-    plotName = "Epidemic curve for Italy2"
-    dfName = "Epidemic curve for Italy2"
+    plotName = "Epidemic curve for Italy"
+    dfName = "Epidemic curve for Italy"
     outFolder = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/plots/"
     outFolder2 = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/dataframes/"
     thresholdW = 0
     thresholdPV = 0
 
     #for curves class
-    #test = curves(database,datesName,casesName,kernel,plotName)
-    #test.run2()
+    test = curves(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2)
+    test.runAndPlot()
     
     #for waves class
     #test = waves(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdW)
@@ -33,8 +33,8 @@ if __name__ == "__main__":
     #test2.run() 
 
     #for peaksValleys class
-    test = peaksValleys(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdPV)
-    test.run() 
+    #test = peaksValleys(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdPV)
+    #test.run() 
     #test2 = peaksValleys(database,datesName,casesName,kernel,plotName,dfName)
     #test2.run() 
     
