@@ -5,35 +5,29 @@ import pandas as pd
 
 if __name__ == "__main__":
     
-    kernel = 28
-    #kernel could be a list with the [datafram, column with the value to select the row, 
-    # value of the row, and column of the kernel]
-    #configFile= pd.read_csv("/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/ConfigFile.csv")
-    #kernel = [configFile,"Code","IT","kernel1"]
-    
     database = pd.read_csv("/Users/linaruiz/Documents/projectEpidemicCurve/data/database.csv")
     datesName = "Date_reported"
     casesName = "New_cases"
     kernel = 28
     plotName = "Epidemic curve for Italy"
-    dfName = "Epidemic curve for Italy"
-    outFolder = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/plots/"
-    outFolder2 = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/dataframes/"
+    dfName = "Epidemic_curve_Italy"
+    outFolderPlot = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/plots/"
+    outFolderDF = "/Users/linaruiz/Documents/projectEpidemicCurve/kabu/Kabu/dataframes/"
     thresholdW = 0
     thresholdPV = 0
 
     #for curves class
-    test = curves(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2)
+    test = curves(database,datesName,casesName,kernel,plotName,dfName,outFolderPlot,outFolderDF)
     test.runAndPlot()
     
     #for waves class
-    #test = waves(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdW)
+    #test = waves(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolderPlot,outFolderDF)
     #test.run() 
     #test2 = waves(database,datesName,casesName,kernel,plotName,dfName)
     #test2.run() 
 
     #for peaksValleys class
-    #test = peaksValleys(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolder2,thresholdPV)
+    #test = peaksValleys(database,datesName,casesName,kernel,plotName,dfName,outFolder,outFolderPlot,outFolderDF)
     #test.run() 
     #test2 = peaksValleys(database,datesName,casesName,kernel,plotName,dfName)
     #test2.run() 
