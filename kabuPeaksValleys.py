@@ -2,6 +2,12 @@ from kabuWaves import *
 
 class peaksValleys(waves):
 
+    """peaksValleys is the class from kabuPeaksValleys module in the EpidemicKabu library. It is a child class of 
+    curves and waves classes from module kabu and kabuWaves, respectively. Its workflow is to identify the cut points
+    that delimites the start and the end of a peak and valley. And filter those cut points according to a threshold.
+    A draw of this workflow in ***LINK****
+     """
+
     def __init__(self,dataframe,datesName,casesName,kernel,plotName,dfName,outFolderPlot = "./plots/",outFolderDF="./dataframes/",thresholdPV=0):
         
         """The arguments to make an instance are:

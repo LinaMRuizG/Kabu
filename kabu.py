@@ -6,7 +6,7 @@ import numpy as np
 
 class curves:
     
-    """curves is the class from kabu module in the EpidemicKabu library.
+    """curves is the class from kabu module in the EpidemicKabu library.⁄n
     The main workflow of this class is to normalize the epidemic curve, 
     smooth it with a Gaussian kernel, and estimate the first and second derivative 
     of the smoothed curveThe main workflow of this class is to normalize, smooth with 

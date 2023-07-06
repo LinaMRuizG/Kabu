@@ -2,10 +2,10 @@ from kabu import *
 
 class waves(curves):
 
-    """waves is the class from kabuWaves module in the EpidemicKabu library.
-    Its workflow is to identify the cut points that delimites the start and the end of a wave using
-    the methods idenCutPoints() and idenPreviousDates(). And filter those cut points according to a threshold 
-    with the method idenPreviousDates(). A draw of this workflow in ***LINK****
+    """waves is the class from kabuWaves module in the EpidemicKabu library. It is a child class of 
+    curves class from module kabu. Its workflow is to identify the cut points that delimites the start
+    and the end of a wave using the methods idenCutPoints() and idenPreviousDates(). And filter those cut 
+    points according to a threshold with the method idenPreviousDates(). A draw of this workflow in ***LINK****
      """
         
     def __init__(self,dataframe,datesName,casesName,kernel,plotName,dfName,outFolderPlot = "./plots/",outFolderDF="./dataframes/",thresholdW=0):
